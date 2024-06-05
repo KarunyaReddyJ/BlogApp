@@ -1,1 +1,1 @@
-export const serverOrigin='192.168.2.234'
+export const serverOrigin=//serevrOrigin
