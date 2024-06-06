@@ -25,8 +25,26 @@ export default function Profile() {
                 Alert.alert('Error fetching details');
             }
         };
+
+        const fetchProfileImage = async () => {
+            try {
+                const response = await axios.post(`http://${serverOrigin}:3000/detail/getProfileImage`, {
+                    message: 'kailse ho?'
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${userData.token}`
+                    }
+                });
+                const base64Image = `data:image/jpeg;base64,${response.data}`;
+            
+                setProfileImage(base64Image);
+            } catch (error) {
+                console.log('Error fetching profile image:', error);
+            }
+        };
+        fetchProfileImage();
         fetchDetails();
-    }, []);
+    }, [userData]);
 
     const handleImagePick = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -49,27 +67,29 @@ export default function Profile() {
     };
 
     const uploadImage = async (image) => {
+        console.log('image',{...image})
         const formData = new FormData();
         formData.append('profileImage', {
-            uri: image.uri,
-            type: 'image/jpeg', // Assuming JPEG format
-            name: 'profile.jpg', // Sample file name
+            uri: image['assets'][0].uri,
+            type: 'image/jpeg', // Adjust according to the file type if needed
+            name: image['assets'][0].fileName, // Use image.fileName directly from ImagePicker result
         });
-
+console.log('form data ',{...formData['_parts']})
         try {
-            Alert.alert('started')
             const response = await axios.post(`http://${serverOrigin}:3000/upload-profile-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${userData.token}`
                 }
             });
+
             if (response.status === 200) {
                 Alert.alert('Profile image uploaded successfully');
             } else {
                 Alert.alert('Failed to upload profile image');
             }
         } catch (error) {
+            console.log('Error uploading image:', error);
             Alert.alert('Error uploading image');
         }
     };
@@ -86,15 +106,14 @@ export default function Profile() {
             {
                 myBlogs.map((task) => (
                     <Blog
-                        content={task.content}
                         key={task._id}
                         _id={task._id}
                         title={task.title}
+                        content={task.content}
                         likes={task.likes.length}
                     />
                 ))
             }
-            
         </View>
     );
 }

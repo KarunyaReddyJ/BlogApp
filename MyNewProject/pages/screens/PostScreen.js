@@ -39,11 +39,12 @@ export default function AddPostForm() {
             />
             <Text style={styles.label}>Content</Text>
             <TextInput
-                style={styles.input}
+                style={{...styles.input,height:400}}
                 value={content}
                 onChangeText={setContent}
                 placeholder="Enter content"
                 multiline
+                textAlignVertical='top'
             />
             <Button title="Add Post" onPress={handleSubmit} />
         </View>

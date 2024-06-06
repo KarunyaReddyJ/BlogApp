@@ -4,7 +4,7 @@ const {createToken}=require('../services/userAuthentication')
 router.route('/')
 .post(async(req,res)=>{
     const {email,password}=req.body
-    console.log(email,password)
+    //console.log(email,password)
     try {
         let user=await User.findOne({email,password})
         if(user){

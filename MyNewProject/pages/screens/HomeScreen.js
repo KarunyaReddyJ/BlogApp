@@ -1,31 +1,57 @@
-import {Text,View} from 'react-native'
-import { AuthContext } from '../../App'
-import { useContext,useEffect,useState } from 'react'
-import axios from 'axios'
-import Blog from '../components/Blog'
-import {serverOrigin} from '../constants/constants'
-import { ScrollView } from 'react-native-gesture-handler'
+import React, { useContext, useEffect, useState } from 'react';
+import { Text, View, StyleSheet, FlatList } from 'react-native';
+import { AuthContext } from '../../App';
+import axios from 'axios';
+import Blog from '../components/Blog';
+import { serverOrigin } from '../constants/constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-export default function HomeScreen(){
-    const [posts, setPosts] = useState([]);
-    useEffect(() => {
-      const getPosts=async()=>{
-        const response=await axios.get(`http://${serverOrigin}:3000/post`)
-        if(response.data)
-            setPosts(response.data.posts)
+
+export default function HomeScreen() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      try {
+        const response = await axios.get(`http://${serverOrigin}:3000/post`);
+        if (response.data) {
+          setPosts(response.data.posts);
+        }
+      } catch (error) {
+        console.error(error);
       }
-      getPosts()
-    }, [posts]);
-    return(
-        <GestureHandlerRootView>
-        <ScrollView>
-        <View>
-            
-            {
-                posts.map((task)=>{
-                    return (<Blog content={task.content} key={task._id} _id={task._id} title={task.title} likes={task.likes.length} />)
-                })
-            }
-        </View></ScrollView></GestureHandlerRootView>
-    )
+    };
+
+    getPosts();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <Blog
+      content={item.content}
+      key={item._id}
+      _id={item._id}
+      title={item.title}
+      likes={item.likes.length}
+    />
+  );
+
+  return (
+    <GestureHandlerRootView style={styles.container}>
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={styles.list}
+      />
+    </GestureHandlerRootView>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+  },
+  list: {
+    padding: 10,
+  },
+});

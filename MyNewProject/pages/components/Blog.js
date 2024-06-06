@@ -8,7 +8,9 @@ import { useContext,useState } from 'react'
 import { Alert } from 'react-native';
 import {serverOrigin} from '../constants/constants'
 export default function Blog({ title, _id, content,likes}) {
-    const [likeCount, setLikes] = useState(likes);
+    const [blogData, setBlogData] = useState({
+        title, _id, content,likes
+    });
     const {userData}=useContext(AuthContext)
     const likeEvent=async()=>{
         try {
@@ -31,7 +33,7 @@ export default function Blog({ title, _id, content,likes}) {
             <View style={styles.bottom} >
             <TouchableOpacity onPress={likeEvent} style={styles.likeButton}>
                 <Image source={likeImg} style={styles.likeImage} />
-                 <Text>{likeCount}</Text>
+                 <Text>{blogData.likes}</Text>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.likeButton}>
                 <Image source={commentImg} style={styles.likeImage} />
@@ -77,3 +79,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
     }
 });
+async function fetchBlogData(){
+    const response= await axios.post(`http://${serverOrigin}:3000/post/${_id}`,{
+        _id:_id
+    })
+}

@@ -23,7 +23,7 @@ const getUser=(token)=>{
 
         return user
     } catch (error) {
-        throw new Error(error)
+        console.log('error',error)
     }
 }
 

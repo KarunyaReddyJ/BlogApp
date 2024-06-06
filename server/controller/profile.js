@@ -1,21 +1,26 @@
 const multer = require('multer');
 const path = require('path');
-
+const {getUser} =require('../services/userAuthentication')
 // Set up storage engine for multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        const authHeader=req.headers.authorization
+        const token = authHeader.split(' ')[1]; // Assuming user ID is accessible in req.user
+        const user=getUser(token)
+        const fileExtension = path.extname(file.originalname);
+        const fileName = `${user._id}${fileExtension}`;
+        cb(null, fileName);
     }
 });
 
 const upload = multer({ storage: storage }).single('profileImage');
 
 // Controller function for handling profile image upload
-exports.uploadProfileImage = (req, res) => {
-    console.log(req)
+const uploadProfileImage = (req, res) => {
+    
     upload(req, res, (err) => {
         if (err) {
             return res.status(500).json({ message: 'Error uploading file', error: err });
@@ -41,3 +46,5 @@ exports.uploadProfileImage = (req, res) => {
         });
     });
 };
+
+module.exports = { uploadProfileImage };

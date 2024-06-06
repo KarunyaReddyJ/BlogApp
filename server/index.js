@@ -14,16 +14,17 @@ const loginController=require('./controller/login')
 const postController=require('./controller/post')
 const detailsController=require('./controller/detail')
 const profileController = require('./controller/profile');
-
+const propfind  =require('./middlewares/debug')
 const Post = require('./models/post');
 const Comment = require('./models/comment');
 const connectDb=require('./db')
+
 const PORT = process.env.PORT || 3000;
 app.use('/register',registerController)
 app.use('/login',loginController)
 app.use('/post',postController)
 app.use('/detail',detailsController)
-app.post('/upload-profile-image', profileController.uploadProfileImage);
+app.post('/upload-profile-image',propfind,profileController.uploadProfileImage);
 
 connectDb()
 .then(()=>{
