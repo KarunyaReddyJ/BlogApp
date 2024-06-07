@@ -7,7 +7,7 @@ import { serverOrigin } from '../constants/constants';
 import Blog from './BlogSmall';
 import userImg from '../assets/user.jpeg';
 
-export default function Profile() {
+export default function Profile({navigation}) {
     const { userData, toggleLogin } = useContext(AuthContext);
     const [myBlogs, setMyBlogs] = useState([]);
     const [profileImage, setProfileImage] = useState(null);
@@ -110,6 +110,7 @@ export default function Profile() {
                         content={task.content}
                         created={task.createdAt}
                         author={task.author}
+                        navigation={navigation}
                     />
                 ))
             }

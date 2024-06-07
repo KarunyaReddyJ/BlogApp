@@ -15,18 +15,6 @@ router.route('/')
         return ({_id,title,createdAt,author:user.username})
     })
     res.status(200).json({blogs})
-    // try {
-    //     const posts=await Post.findById(user._id).sort({createdAt:-1});
-    //     const blogs=await Promise.all(posts.map(async({author,_id,createdAt,title})=>{
-    //         return (
-    //             {author:user.username,_id,createdAt,title}
-    //         )
-    //     }))
-    //     console.log(blogs)
-    //     res.status(200).json({blogs})
-    // } catch (error) {
-    //     console.error(error)
-    // }
 })
 router.route('/getProfileImage')
 .post(async(req,res)=>{
