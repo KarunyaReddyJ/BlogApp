@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { AuthContext } from '../../App';
 import axios from 'axios';
-import Blog from '../components/Blog';
+import Blog from '../components/BlogSmall';
 import { serverOrigin } from '../constants/constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function HomeScreen() {
       try {
         const response = await axios.get(`http://${serverOrigin}:3000/post`);
         if (response.data) {
-          setPosts(response.data.posts);
+          setPosts(response.data.blogs);
         }
       } catch (error) {
         console.error(error);
@@ -26,11 +26,14 @@ export default function HomeScreen() {
 
   const renderItem = ({ item }) => (
     <Blog
-      content={item.content}
+      // content={item.content}
       key={item._id}
       _id={item._id}
       title={item.title}
-      likes={item.likes.length}
+      // likes={item.likes.length}
+      created={item.createdAt}
+      author={item.author}
+      navigation={navigation}
     />
   );
 

@@ -24,7 +24,7 @@ export default function AddPostForm() {
             }
         } catch (error) {
             console.error(error);
-            Alert.alert('Error', 'An error occurred while creating the post');
+            
         }
     };
 

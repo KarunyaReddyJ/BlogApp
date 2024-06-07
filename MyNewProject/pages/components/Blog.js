@@ -4,13 +4,33 @@ import likeImg from '../assets/like.jpeg';
 import commentImg from '../assets/comment.jpeg'
 import axios from 'axios'
 import { AuthContext } from '../../App'
-import { useContext,useState } from 'react'
+import { useContext,useState,useEffect } from 'react'
 import { Alert } from 'react-native';
 import {serverOrigin} from '../constants/constants'
-export default function Blog({ title, _id, content,likes}) {
-    const [blogData, setBlogData] = useState({
-        title, _id, content,likes
-    });
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+export default function Blog({ route}) {
+    const [blogData, setBlogData] = useState(null);
+    useEffect(() => {
+      setBlogData(prev=>({...prev,_id:route.params.blogId}))
+      const fetchPost=async()=>{
+        console.log('params',route.params.blogId)
+        try {
+            const response=await axios.post(`http://${serverOrigin}:3000/post/${route.params.blogId}`,{
+            token:userData.token,
+            
+        })
+        console.log('\nres',{...response})
+        if(response)
+            setBlogData(response.data.post)
+        else
+            Alert.alert('sorry')
+        } catch (error) {
+            //Alert.alert('error')
+            console.log('error',error)
+        }
+      }
+      fetchPost()
+    }, []);
     const {userData}=useContext(AuthContext)
     const likeEvent=async()=>{
         try {
@@ -26,10 +46,13 @@ export default function Blog({ title, _id, content,likes}) {
             Alert.alert('error')
         }
     }
+    if(!blogData)
+        return(<Text>Loading....</Text>)
     return (
+        <GestureHandlerRootView style={{flex:1}} >
         <View style={styles.container}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.content}>{content}</Text>
+            <Text style={styles.title}>{blogData.title || 'title'}</Text>
+            <Text style={styles.content}>{blogData.content}</Text>
             <View style={styles.bottom} >
             <TouchableOpacity onPress={likeEvent} style={styles.likeButton}>
                 <Image source={likeImg} style={styles.likeImage} />
@@ -40,6 +63,7 @@ export default function Blog({ title, _id, content,likes}) {
             </TouchableOpacity>
             </View>
         </View>
+        </GestureHandlerRootView>
     );
 }
 

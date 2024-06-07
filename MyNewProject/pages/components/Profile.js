@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker'; // Import from expo-image-pick
 import axios from 'axios';
 import { AuthContext } from '../../App';
 import { serverOrigin } from '../constants/constants';
-import Blog from './Blog';
+import Blog from './BlogSmall';
 import userImg from '../assets/user.jpeg';
 
 export default function Profile() {
@@ -19,6 +19,7 @@ export default function Profile() {
                     token: userData.token
                 });
                 if (response.status === 200) {
+                    console.log(`${Math.random()}`,response.data.blogs[0])
                     setMyBlogs(response.data.blogs);
                 }
             } catch (error) {
@@ -36,7 +37,6 @@ export default function Profile() {
                     }
                 });
                 const base64Image = `data:image/jpeg;base64,${response.data}`;
-            
                 setProfileImage(base64Image);
             } catch (error) {
                 console.log('Error fetching profile image:', error);
@@ -67,14 +67,12 @@ export default function Profile() {
     };
 
     const uploadImage = async (image) => {
-        console.log('image',{...image})
         const formData = new FormData();
         formData.append('profileImage', {
             uri: image['assets'][0].uri,
-            type: 'image/jpeg', // Adjust according to the file type if needed
-            name: image['assets'][0].fileName, // Use image.fileName directly from ImagePicker result
+            type: 'image/jpeg', 
+            name: image['assets'][0].fileName, 
         });
-console.log('form data ',{...formData['_parts']})
         try {
             const response = await axios.post(`http://${serverOrigin}:3000/upload-profile-image`, formData, {
                 headers: {
@@ -98,7 +96,7 @@ console.log('form data ',{...formData['_parts']})
         <View style={styles.container}>
             <View style={styles.profileHeader}>
                 <TouchableOpacity onPress={handleImagePick}>
-                    <Image source={profileImage ? { uri: profileImage } : userImg} style={styles.profileImage} />
+                    <Image source={profileImage ? { uri: profileImage.uri|| profileImage } : userImg} style={styles.profileImage} />
                 </TouchableOpacity>
                 <Text style={styles.username}>{userData.username}</Text>
             </View>
@@ -110,14 +108,15 @@ console.log('form data ',{...formData['_parts']})
                         _id={task._id}
                         title={task.title}
                         content={task.content}
-                        likes={task.likes.length}
+                        created={task.createdAt}
+                        author={task.author}
                     />
                 ))
             }
         </View>
     );
 }
-
+//length
 const styles = StyleSheet.create({
     container: {
         flex: 1,

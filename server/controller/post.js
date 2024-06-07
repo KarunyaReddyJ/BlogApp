@@ -1,19 +1,29 @@
 const router = require('express').Router();
 const Post = require('../models/post');
+const User = require('../models/user');
 const {getUser}=require('../services/userAuthentication')
 const checkIfLoggedIn=require('../middlewares/checkIfLoggedIn')
 router.route('/')
 .get(async(req,res)=>{
     try {
-        const posts=await Post.find();
-        res.status(200).json({posts})
+        const posts=await Post.find().sort({createdAt:-1});
+        const blogs=await Promise.all(posts.map(async({author,_id,createdAt,title})=>{
+            const user=await User.findById(author)
+            return (
+                {author:user.username,_id,createdAt,title}
+            )
+        }))
+        console.log(blogs)
+        res.status(200).json({blogs})
     } catch (error) {
         console.error(error)
     }
 })
+
 router.route('/create')
 .post(checkIfLoggedIn,async(req,res)=>{
     const {title,content,token}=req.body
+    console.log({title,content,token})
     try {
         const user=getUser(token)
         const post=await Post.create({title,content,author:user._id})
@@ -21,7 +31,19 @@ router.route('/create')
            return res.status(200).json({MSG:"Post created"})
         res.status(500).json({msg:"cannot create post"})
     } catch (error) {
-        throw new Error(error)
+        console.log('error while posting',error)
+    }
+})
+router.route('/:id')
+.post(async(req,res)=>{
+    const id=req.params.id
+    console.log('id',id)
+    const post=await Post.findById(id);
+    try {
+        console.log('pts',post)
+       res.status(200).json({post})
+    } catch (error) {
+        console.error(error)
     }
 })
 router.route('/:postId/like')

@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './pages/screens/HomeScreen';
 import ProfileScreen from './pages/screens/ProfileScreen';
 import PostScreen from './pages/screens/PostScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { useState, createContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import HomeScreenStackNavigator from './pages/stackScreens/HomeStackNavigator';
 export const AuthContext = createContext();
 
 export default function App() {
@@ -59,7 +58,7 @@ export default function App() {
         >
           <Tab.Screen 
             name="Home" 
-            component={HomeScreen} 
+            component={HomeScreenStackNavigator} 
             options={{ 
               headerTitle: (props) => <Text style={styles.headerTitle}>Home</Text>,
               headerStyle: styles.header,
