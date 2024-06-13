@@ -8,7 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import HomeScreenStackNavigator from './pages/stackScreens/HomeStackNavigator';
 export const AuthContext = createContext();
-import ProfileStackScreen from './pages/stackScreens/ProfileStackNavigator';
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({
@@ -79,7 +78,7 @@ export default function App() {
           />
           <Tab.Screen 
             name="Profile" 
-            component={ProfileStackScreen} 
+            component={ProfileScreen} 
             options={{ 
               headerTitle: (props) => <Text style={styles.headerTitle}>Profile</Text>,
               headerStyle: styles.header,
