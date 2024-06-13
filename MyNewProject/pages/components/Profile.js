@@ -6,9 +6,10 @@ import { AuthContext } from '../../App';
 import { serverOrigin } from '../constants/constants';
 import Blog from './BlogSmall';
 import userImg from '../assets/user.jpeg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile({navigation}) {
-    const { userData, toggleLogin } = useContext(AuthContext);
+    const { userData, toggleLogin,loggedIn } = useContext(AuthContext);
     const [myBlogs, setMyBlogs] = useState([]);
     const [profileImage, setProfileImage] = useState(null);
 
@@ -44,7 +45,7 @@ export default function Profile({navigation}) {
         };
         fetchProfileImage();
         fetchDetails();
-    }, [userData]);
+    }, [userData,profileImage]);
 
     const handleImagePick = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -92,6 +93,7 @@ export default function Profile({navigation}) {
         }
     };
 
+
     return (
         <View style={styles.container}>
             <View style={styles.profileHeader}>
@@ -101,6 +103,7 @@ export default function Profile({navigation}) {
                 <Text style={styles.username}>{userData.username}</Text>
             </View>
             <Button title='Logout' onPress={toggleLogin} />
+           
             {
                 myBlogs.map((task) => (
                     <Blog

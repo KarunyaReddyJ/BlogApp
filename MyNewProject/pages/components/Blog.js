@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,ScrollView, Image, TouchableOpacity } from 'react-native';
 import likeImg from '../assets/like.jpeg';
 import commentImg from '../assets/comment.jpeg'
 import axios from 'axios'
@@ -10,6 +10,7 @@ import {serverOrigin} from '../constants/constants'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function Blog({ route}) {
     const [blogData, setBlogData] = useState(null);
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
       setBlogData(prev=>({...prev,_id:route.params.blogId}))
       const fetchPost=async()=>{
@@ -34,9 +35,9 @@ export default function Blog({ route}) {
     const {userData}=useContext(AuthContext)
     const likeEvent=async()=>{
         try {
-            const response=await axios.post(`http://${serverOrigin}:3000/post/${_id}/like`,{
+            const response=await axios.post(`http://${serverOrigin}:3000/post/${blogData._id}/like`,{
             token:userData.token,
-            _id
+            _id:blogData._id
         })
         if(response.status===200)
             Alert.alert('hello')
@@ -50,19 +51,21 @@ export default function Blog({ route}) {
         return(<Text>Loading....</Text>)
     return (
         <GestureHandlerRootView style={{flex:1}} >
+            <ScrollView>
         <View style={styles.container}>
             <Text style={styles.title}>{blogData.title || 'title'}</Text>
             <Text style={styles.content}>{blogData.content}</Text>
             <View style={styles.bottom} >
             <TouchableOpacity onPress={likeEvent} style={styles.likeButton}>
                 <Image source={likeImg} style={styles.likeImage} />
-                 <Text>{blogData.likes}</Text>
+                 <Text>{(blogData.likes || []).length}</Text>
             </TouchableOpacity>
             <TouchableOpacity  style={styles.likeButton}>
                 <Image source={commentImg} style={styles.likeImage} />
             </TouchableOpacity>
             </View>
         </View>
+        </ScrollView>
         </GestureHandlerRootView>
     );
 }

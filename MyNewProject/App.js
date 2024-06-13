@@ -17,6 +17,7 @@ export default function App() {
   });
 
   useEffect(() => {
+   // Alert.alert(AsyncStorage.getItem('NativeLoggedIn'))
     const checkLoggedIn = async () => {
       const logged = await AsyncStorage.getItem('NativeLoggedIn');
       if (!logged) return false;
@@ -29,7 +30,11 @@ export default function App() {
 
   const Tab = createBottomTabNavigator();
   const toggleLogin = () => {
-    setLoggedIn(!loggedIn);
+    
+    setLoggedIn(prev=>{
+      console.log(prev)
+      return !prev});
+
   };
 
   return (

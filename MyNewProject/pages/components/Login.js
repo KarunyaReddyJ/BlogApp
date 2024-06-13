@@ -20,7 +20,7 @@ const LoginScreen = () => {
    
           if(response.data.token){
             const {token,username,_id}=response.data
-            AsyncStorage.setItem('NativeLoggedIn',JSON.stringify({token,username}))
+            //AsyncStorage.setItem('NativeLoggedIn',JSON.stringify({token,username}))
             setUserData({token,username})
             toggleLogin()
           }
@@ -34,11 +34,6 @@ const LoginScreen = () => {
         }
     }
     fetchData()
-    // if (username === 'user' && password === 'password') {
-    //   navigation.navigate('Home'); // Navigate to Home screen on successful login
-    // } else {
-    //   alert('Invalid username or password');
-    // }
   };
 
   return (

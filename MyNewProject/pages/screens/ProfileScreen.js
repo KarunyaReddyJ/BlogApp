@@ -10,17 +10,19 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 export default function ProfileScreen(){
     const {loggedIn}=useContext(AuthContext)
     const Tabs=createMaterialTopTabNavigator()
+    if(logged)
+        return(
+            <GestureHandlerRootView>
+            <ScrollView>
+            <Profile/>
+            </ScrollView>
+        </GestureHandlerRootView>
+    )
     return(
         <View style={styles.container} >
             
                 {
-                    loggedIn?
-                    <GestureHandlerRootView>
-                        <ScrollView>
-                        <Profile/>
-                        </ScrollView>
-                    </GestureHandlerRootView>
-                    :
+                    
                     <Tabs.Navigator>
                         <Tabs.Screen 
                         name="Login"
