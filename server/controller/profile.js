@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
         const fileExtension = path.extname(file.originalname);
         const fileName = `${user._id}${fileExtension}`;
         cb(null, fileName);
+        
     }
 });
 
@@ -20,9 +21,10 @@ const upload = multer({ storage: storage }).single('profileImage');
 
 // Controller function for handling profile image upload
 const uploadProfileImage = (req, res) => {
-    
+    console.log(req.body)
     upload(req, res, (err) => {
         if (err) {
+            console.log(err)
             return res.status(500).json({ message: 'Error uploading file', error: err });
         }
 

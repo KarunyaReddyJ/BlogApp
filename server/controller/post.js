@@ -49,6 +49,7 @@ router.route('/:id')
 router.route('/:postId/like')
 .post(checkIfLoggedIn,async(req,res)=>{
     const {token,_id}=req.body
+    console.log({token,_id})
     const user=getUser(token)
     const post=await Post.findOne({_id})
     if(post.likes.includes(user._id))
@@ -56,7 +57,7 @@ router.route('/:postId/like')
     else
         post.likes.push(user._id)
     const updatedPost=await Post.findByIdAndUpdate(_id,{likes:post.likes},{new:true})
-    if(updatedPost===undefined)
+    if(!updatedPost)
         return res.status(404).json({msg:"Cannot Update Post"})
     else
         return res.status(200).json({msg:'success'})

@@ -1,19 +1,19 @@
 const jwt=require('jsonwebtoken')
-const PRIVATEKEY=process.env.PRIVATEKEY
+const PRIVATEKEY=process.env.PRIVATEKEY || 'hello'
 
 const createToken=(user)=>{
-    if(user){
+    try {
+        //console.log(user)
         const token=jwt.sign({
             username:user.username,
             email:user.email,
             _id:user._id
-        },
+            },
             PRIVATEKEY)
-        console.log(token)
+            console.log(token)
         return token
-    }
-    else{
-        throw new Error('Invalid User')
+    } catch (error) {
+        return (error)
     }
 }
 
